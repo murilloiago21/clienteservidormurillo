@@ -40,7 +40,7 @@ function enviarLogin() {
     alert('Preencha os campos!');
   } else {
     const data = {
-      registro: registro,
+      registro: parseInt(registro),
       senha: hash.toString(),
     };
     fetch(endereco, {
@@ -145,46 +145,49 @@ function enviarCadastro(apiUrl, gettoken) {
   } else {
     alert('Preencha o tipo de usuário')
   }
-
-  if (tipousuariocad != null) {
-    var hash = CryptoJS.MD5(senhacad);
-    const data = {
-      registro: registrocad,
-      nome: nomecad,
-      email: emailcad,
-      senha: hash.toString(),
-      tipo_usuario: tipousuariocad
-    };
-    fetch(endereco, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ` + gettoken
-      },
-      body: JSON.stringify(data),
-    })
-      .then(response => {
-        status = response.status;
-        if (response.status === 200) {
-          return response.json();
-        } else if (response.status === 401) {
-          return response.json();
-        } else if (response.status === 403) {
-          return response.json();
-        } else {
-          throw new Error('Erro na requisição');
-        }
+  if (/^\d+$/.test(registrocad)) {
+    if (tipousuariocad != null) {
+      var hash = CryptoJS.MD5(senhacad);
+      const data = {
+        registro: parseInt(registrocad),
+        nome: nomecad,
+        email: emailcad,
+        senha: hash.toString(),
+        tipo_usuario: tipousuariocad
+      };
+      fetch(endereco, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ` + gettoken
+        },
+        body: JSON.stringify(data),
       })
-      .then(data => {
-        console.log(data);
-        alert(status + ' - \n' + JSON.stringify(data));
-        if (status === 200) {
-          voltarHome();
-        }
-      })
-      .catch(error => {
-        console.error('Ocorreu um erro na requisição:', error);
-      });
+        .then(response => {
+          status = response.status;
+          if (response.status === 200) {
+            return response.json();
+          } else if (response.status === 401) {
+            return response.json();
+          } else if (response.status === 403) {
+            return response.json();
+          } else {
+            throw new Error('Erro na requisição');
+          }
+        })
+        .then(data => {
+          console.log(data);
+          alert(status + ' - \n' + JSON.stringify(data));
+          if (status === 200) {
+            voltarHome();
+          }
+        })
+        .catch(error => {
+          console.error('Ocorreu um erro na requisição:', error);
+        });
+    }
+  }else {
+    alert('O registro não pode conter letras!');
   }
 }
 
@@ -197,7 +200,7 @@ function lerUsuarios(apiUrl, gettoken) {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ` + gettoken
     },
-    })
+  })
     .then(response => {
       status = response.status;
       if (response.status === 200) {

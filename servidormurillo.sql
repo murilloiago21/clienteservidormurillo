@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 01-Nov-2023 às 13:51
+-- Tempo de geração: 05-Nov-2023 às 19:44
 -- Versão do servidor: 10.4.28-MariaDB
--- versão do PHP: 8.0.28
+-- versão do PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL,
-  `registro` varchar(150) NOT NULL,
+  `registro` int(30) NOT NULL,
   `nome` varchar(150) NOT NULL,
   `email` varchar(150) NOT NULL,
   `senha` varchar(150) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `registro`, `nome`, `email`, `senha`, `tipo_usuario`) VALUES
-(1, '21', 'murillo', 'murillo1@murillo.com', '01221dd8ff128adabdaddb9fb5436f63', 1);
+(1, 21, 'murillo', 'murillo1@murillo.com', '01221dd8ff128adabdaddb9fb5436f63', 1);
 
 -- --------------------------------------------------------
 
@@ -52,7 +52,7 @@ INSERT INTO `usuarios` (`id`, `registro`, `nome`, `email`, `senha`, `tipo_usuari
 CREATE TABLE `usuarios_logados` (
   `id` int(11) NOT NULL,
   `token` varchar(500) NOT NULL,
-  `registro` varchar(200) NOT NULL,
+  `registro` int(30) NOT NULL,
   `tipo_usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

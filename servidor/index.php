@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 $secret_key = 'Dv#T5@zR*wYq6p$GnHjZ^B^vXs&M8K@a';
                 $dados = array(
-                    'registro' => $registro,
+                    'registro' => strval($registro),
                     'senha' => $senha,
                 );
                 $token = JWT::encode($dados, $secret_key, 'HS256');
