@@ -45,100 +45,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo $json;
             break;
         case '/logout':
-                if(isset($_SERVER['HTTP_AUTHORIZATION'])){
-                    $tokenlogout = str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION']);
-                    $bd = Conexao::get();
-                    $query = $bd->prepare("SELECT count(*) FROM usuarios_logados WHERE token = :ptoken");
-                    $query->bindParam(':ptoken', $tokenlogout);
-                    $query->execute(); 
-                    $usuario = $query->fetch() ?? null;
-                    $resultadocount = $usuario['count(*)'];
-                    if($resultadocount == 1){
-                        logout($tokenlogout);
-                        $resultado = array(
-                            "success" => true,
-                            "message" => "Logout bem-sucedido!"
-                        );
-                        http_response_code(200);
-                        $json = json_encode($resultado);
-                        echo $json;
-                    }else if($resultadocount == 0){
-                        $resultado = array(
-                            "success" => false,
-                            "message" => "Não autenticado, token inválido!"
-                        );
-                        http_response_code(401);
-                        $json = json_encode($resultado);
-                        echo $json;
-                    }
-                    
-                }else {
-                    $resultado = array(
-                        "success" => false,
-                        "message" => "Não autenticado!"
-                    );
-                    http_response_code(401);
-                    $json = json_encode($resultado);
-                    echo $json;
-                    }
-                
-            break;
-        case '/usuarios':
-            if(isset($_SERVER['HTTP_AUTHORIZATION'])){
-                $tokencad = str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION']);
+            if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+                $tokenlogout = str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION']);
                 $bd = Conexao::get();
-                $query = $bd->prepare("SELECT count(*), tipo_usuario FROM usuarios_logados WHERE token = :ptoken");
-                $query->bindParam(':ptoken', $tokencad);
-                $query->execute(); 
+                $query = $bd->prepare("SELECT count(*) FROM usuarios_logados WHERE token = :ptoken");
+                $query->bindParam(':ptoken', $tokenlogout);
+                $query->execute();
                 $usuario = $query->fetch() ?? null;
                 $resultadocount = $usuario['count(*)'];
-                $tipousuario = $usuario['tipo_usuario'];
-                if($resultadocount == 1){
-                    if($tipousuario == 1){
-                        $json = file_get_contents('php://input');
-                        $data = json_decode($json, true);
-                        $registro = $data['registro'];
-                        $nome = $data['nome'];
-                        $email = $data['email'];
-                        $senha = $data['senha'];
-                        $tipo_usuario = $data['tipo_usuario'];
-                        $verificacao = novoUsuario($registro,$nome,$email,$senha,$tipo_usuario);
-                        if($verificacao == true){
-                            $resultado = array(
-                                "success" => true,
-                                "message" => "Usuário criado com sucesso!"
-                            );
-                            http_response_code(200);
-                            $json = json_encode($resultado);
-                            echo $json;
-                        }else{
-                            $resultado = array(
-                                "success" => false,
-                                "message" => "Registro ou email ja existe na base de dados!"
-                            );
-                            http_response_code(403);
-                            $json = json_encode($resultado);
-                            echo $json;
-                        }
-                    }else{  
-                        $resultado = array(
-                            "success" => false,
-                            "message" => "Usuário não autorizado, usuário comum!"
-                        );
-                        http_response_code(403);
-                        $json = json_encode($resultado);
-                        echo $json;
-                    }
-                }else {
+                if ($resultadocount == 1) {
+                    logout($tokenlogout);
+                    $resultado = array(
+                        "success" => true,
+                        "message" => "Logout bem-sucedido!"
+                    );
+                    http_response_code(200);
+                    $json = json_encode($resultado);
+                    echo $json;
+                } else if ($resultadocount == 0) {
                     $resultado = array(
                         "success" => false,
-                        "message" => "Não autenticado!"
+                        "message" => "Não autenticado, token inválido!"
                     );
                     http_response_code(401);
                     $json = json_encode($resultado);
                     echo $json;
                 }
-            }else {
+
+            } else {
                 $resultado = array(
                     "success" => false,
                     "message" => "Não autenticado!"
@@ -147,23 +81,99 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $json = json_encode($resultado);
                 echo $json;
             }
-        break;
+
+            break;
+        case '/usuarios':
+            if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+                $tokencad = str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION']);
+                $bd = Conexao::get();
+                $query = $bd->prepare("SELECT count(*), tipo_usuario FROM usuarios_logados WHERE token = :ptoken");
+                $query->bindParam(':ptoken', $tokencad);
+                $query->execute();
+                $usuario = $query->fetch() ?? null;
+                $resultadocount = $usuario['count(*)'];
+                $tipousuario = $usuario['tipo_usuario'];
+                if ($resultadocount == 1) {
+                    if ($tipousuario == 1) {
+                        $json = file_get_contents('php://input');
+                        $data = json_decode($json, true);
+                        $registro = $data['registro'];
+                        $nome = $data['nome'];
+                        $email = $data['email'];
+                        $senha = $data['senha'];
+                        $tipo_usuario = $data['tipo_usuario'];
+                        if (possuiLetras($registro)) {
+                            $resultado = array(
+                                "success" => false,
+                                "message" => "O registro não pode conter letras!"
+                            );
+                            http_response_code(403);
+                            $json = json_encode($resultado);
+                            echo $json;
+                        } else {
+                            $verificacao = novoUsuario($registro, $nome, $email, $senha, $tipo_usuario);
+                            if ($verificacao == true) {
+                                $resultado = array(
+                                    "success" => true,
+                                    "message" => "Usuário criado com sucesso!"
+                                );
+                                http_response_code(200);
+                                $json = json_encode($resultado);
+                                echo $json;
+                            } else {
+                                $resultado = array(
+                                    "success" => false,
+                                    "message" => "Registro ou email ja existe na base de dados!"
+                                );
+                                http_response_code(403);
+                                $json = json_encode($resultado);
+                                echo $json;
+                            }
+                        }
+                    } else {
+                        $resultado = array(
+                            "success" => false,
+                            "message" => "Usuário não autorizado, usuário comum!"
+                        );
+                        http_response_code(403);
+                        $json = json_encode($resultado);
+                        echo $json;
+                    }
+                } else {
+                    $resultado = array(
+                        "success" => false,
+                        "message" => "Não autenticado!"
+                    );
+                    http_response_code(401);
+                    $json = json_encode($resultado);
+                    echo $json;
+                }
+            } else {
+                $resultado = array(
+                    "success" => false,
+                    "message" => "Não autenticado!"
+                );
+                http_response_code(401);
+                $json = json_encode($resultado);
+                echo $json;
+            }
+            break;
     }
-}else if ($_SERVER['REQUEST_METHOD'] == 'GET'){
-    if(str_contains($_SERVER['REQUEST_URI'], '/usuarios')){
+} else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (str_contains($_SERVER['REQUEST_URI'], '/usuarios')) {
         $parametro = str_replace('/usuarios', '', $_SERVER['REQUEST_URI']);
-        if(strlen($parametro) == 0){
-            if(isset($_SERVER['HTTP_AUTHORIZATION'])){
+        if (strlen($parametro) == 0) {
+            if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
                 $tokenuser = str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION']);
                 $bd = Conexao::get();
                 $query = $bd->prepare("SELECT count(*), tipo_usuario FROM usuarios_logados WHERE token = :ptoken");
                 $query->bindParam(':ptoken', $tokenuser);
-                $query->execute(); 
+                $query->execute();
                 $usuario = $query->fetch() ?? null;
                 $resultadocount = $usuario['count(*)'];
                 $tipousuario = $usuario['tipo_usuario'];
-                if($resultadocount == 1){
-                    if($tipousuario == 1){
+                if ($resultadocount == 1) {
+                    if ($tipousuario == 1) {
                         $result = listaUsuarios();
                         $resultado = array(
                             "usuarios" => $result,
@@ -173,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         http_response_code(200);
                         $json = json_encode($resultado);
                         echo $json;
-                    }else{  
+                    } else {
                         $result = dadosUsuario($tokenuser);
                         $resultado = array(
                             "usuarios" => $result,
@@ -184,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $json = json_encode($resultado);
                         echo $json;
                     }
-                }else {
+                } else {
                     $resultado = array(
                         "success" => false,
                         "message" => "Não autenticado!"
@@ -193,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $json = json_encode($resultado);
                     echo $json;
                 }
-            }else {
+            } else {
                 $resultado = array(
                     "success" => false,
                     "message" => "Não autenticado!"
@@ -202,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $json = json_encode($resultado);
                 echo $json;
             }
-        }else{
+        } else {
             $resultado = array(
                 "success" => false,
                 "message" => "Funcionalidade ainda não implementada!"
@@ -211,19 +221,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $json = json_encode($resultado);
             echo $json;
         }
-        
 
 
-/*
-        $resultado = array(
-            "success" => true,
-            "message" => "Contem!"
-        );
-        http_response_code(200);
-        $json = json_encode($resultado);
-        echo $json;*/
+
+        /*
+                $resultado = array(
+                    "success" => true,
+                    "message" => "Contem!"
+                );
+                http_response_code(200);
+                $json = json_encode($resultado);
+                echo $json;*/
     }
-}else {
+} else {
     //print_r($_SERVER);
 }
 
@@ -246,7 +256,7 @@ function adicionarLogin($registro, $token)
     $query->bindParam(':pregistro', $registro);
     $query->execute();
     $result = $query->fetch() ?? null;
-    if($result != null){
+    if ($result != null) {
         $bd = Conexao::get();
         $query = $bd->prepare("INSERT INTO usuarios_logados(registro, token, tipo_usuario) VALUES(:pregistro, :ptoken, :ptipo_usuario)");
         $query->bindParam(':pregistro', $registro);
@@ -272,12 +282,12 @@ function novoUsuario($registro, $nome, $email, $senha, $tipo_usuario)
     $bd = Conexao::get();
     $query = $bd->prepare("SELECT count(*) FROM usuarios WHERE registro = :pregistro");
     $query->bindParam(':pregistro', $registro);
-    $query->execute(); 
+    $query->execute();
     $usuario = $query->fetch() ?? null;
     $resultadocount = $usuario['count(*)'];
-    if($resultadocount > 0){
+    if ($resultadocount > 0) {
         return false;
-    }else{
+    } else {
         $bd = Conexao::get();
         $query = $bd->prepare("INSERT INTO usuarios(registro, nome, email, senha, tipo_usuario) VALUES (:pregistro, :pnome, :pemail, :psenha, :ptipo_usuario)");
         $query->bindParam(':pregistro', $registro);
@@ -321,5 +331,9 @@ function dadosUsuario($token)
     return $usuarios;
 }
 
+function possuiLetras($str)
+{
+    return preg_match('/[a-zA-Z]/', $str) === 1;
+}
 
 ?>
