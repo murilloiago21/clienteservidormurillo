@@ -1,31 +1,45 @@
-body{
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    /* Safari e Chrome */
+    margin: 0;
+    /* Remover o espaço entre o número e a borda */
+}
+
+
+body {
     padding: 0px;
     margin: 0px;
     box-sizing: border-box;
 }
-button{
+
+button {
     cursor: pointer;
 }
-#header{
+
+#header {
     height: 180px;
     width: 100%;
     background-color: rgb(223, 223, 223);
     border-bottom: 1px solid rgb(149, 149, 149);
     box-shadow: 2px 1px 3px rgb(152, 152, 152);
 }
-#header h1{
+
+#header h1 {
     position: relative;
     top: 80px;
     margin: 0px;
     text-align: center;
     font-size: 22px;
 }
-#container{
+
+#container {
     width: 100%;
     height: 565px;
     border-bottom: 1px solid rgb(149, 149, 149);
     box-shadow: 2px 1px 3px rgb(152, 152, 152);
 }
+
 #endereco {
     position: relative;
     margin: auto;
@@ -34,17 +48,20 @@ button{
     width: 450px;
     top: 20px;
 }
-#endereco label{
+
+#endereco label {
     margin: 0%;
     padding: 0%;
     font-size: 18px;
 }
-#endereco input{
+
+#endereco input {
     margin-left: 5px;
     font-size: 16px;
     width: 170px;
 }
-#cardlogin{
+
+#cardlogin {
     align-self: center;
     position: relative;
     top: 40px;
@@ -56,31 +73,37 @@ button{
     border-radius: 4px;
     box-shadow: 1px 1px 3px rgb(152, 152, 152);
 }
-#cardlogin h2{
+
+#cardlogin h2 {
     text-align: center;
     position: relative;
     top: 35px;
 }
-#formlogin{
+
+#formlogin {
     font-size: 20px;
     position: relative;
     top: 80px;
     left: 90px;
 }
-#formlogin input{
+
+#formlogin input {
     font-size: 16px;
 }
-#formlogin #registro{
+
+#formlogin #registro {
     position: relative;
     margin-left: 10px;
     top: -1px;
 }
-#formlogin #senha{
+
+#formlogin #senha {
     position: relative;
     left: 28px;
     top: -2px;
 }
-#btn-login{
+
+#btn-login {
     position: relative;
     top: 80px;
     border-radius: 7px;
@@ -94,7 +117,7 @@ button{
     cursor: pointer;
 }
 
-#btn-enviarcad{
+#btn-enviarcad,  #btn-enviaratt{
     position: relative;
     top: -50px;
     border-radius: 7px;
@@ -106,4 +129,26 @@ button{
     left: 90px;
     font-size: 16px;
     cursor: pointer;
+}
+
+
+
+#tabela-dinamica {
+    border: 1px solid black;
+    width: 480px;
+    text-align: center;
+    padding: 0px;
+    border-collapse: collapse;
+}
+
+#tabela-dinamica tr td {
+    border: 1px solid black;
+    padding: none;
+    margin: 0;
+}
+
+#tabela-dinamica th {
+    border: 1px solid black;
+    padding: none;
+    margin: 0;
 }

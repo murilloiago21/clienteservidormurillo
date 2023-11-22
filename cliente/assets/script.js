@@ -60,12 +60,12 @@ function enviarLogin() {
         } else if (response.status === 401) {
           return response.json();
         } else {
-          throw new Error('Erro na requisição');
+          return response.json();
         }
       })
       .then(data => {
         console.log(data);
-        alert(status + ' - \n' + JSON.stringify(data));
+        alert(status);
         if (status === 200) {
           meutoken = data['token'];
           reg = registro;
@@ -100,12 +100,12 @@ function enviarLogout(apiUrl, gettoken) {
       } else if (response.status === 401) {
         return response.json();
       } else {
-        throw new Error('Erro na requisição');
+        return response.json();
       }
     })
     .then(data => {
       console.log(data);
-      alert(status + ' - \n' + JSON.stringify(data));
+      alert(status);
       if (status === 200) {
         document.getElementById('sairsessao').click();
       }
@@ -116,13 +116,28 @@ function enviarLogout(apiUrl, gettoken) {
 }
 
 function acaoHome(valor) {
-  if (valor == 'cadastro' || valor == 'leitura') {
-    if (valor == 'leitura') {
-      //aqui
-    } else {
+  if (valor == 'leitura-id') {
+    var id = document.getElementById('numerolerid').value;
+    if (id.length > 0) {
+      document.getElementById('idbusca').value = id;
       document.getElementById('acao').value = valor;
       document.getElementById('enviaracao').click()
+    } else {
+      alert('Preencha o registro!');
     }
+  } else {
+    document.getElementById('acao').value = valor;
+    document.getElementById('enviaracao').click()
+  }
+}
+
+function adicionarLinhaTabela(dados) {
+  var tabela = document.getElementById("tabela-dinamica");
+  var corpoTabela = tabela.getElementsByTagName("tbody")[0];
+  var novaLinha = corpoTabela.insertRow();
+  for (var i = 0; i < dados.length; i++) {
+    var novaCelula = novaLinha.insertCell(i);
+    novaCelula.innerHTML = dados[i];
   }
 }
 
@@ -172,12 +187,12 @@ function enviarCadastro(apiUrl, gettoken) {
           } else if (response.status === 403) {
             return response.json();
           } else {
-            throw new Error('Erro na requisição');
+            return response.json();
           }
         })
         .then(data => {
           console.log(data);
-          alert(status + ' - \n' + JSON.stringify(data));
+          alert(status);
           if (status === 200) {
             voltarHome();
           }
@@ -186,10 +201,92 @@ function enviarCadastro(apiUrl, gettoken) {
           console.error('Ocorreu um erro na requisição:', error);
         });
     }
-  }else {
+  } else {
     alert('O registro não pode conter letras!');
   }
 }
+
+function atualizarCadastro(apiUrl, gettoken) {
+  var status;
+  var nomecad = document.getElementById('nomecad').value;
+  var emailcad = document.getElementById('emailcad').value;
+  var senhacad = document.getElementById('senhacad').value;
+  var hash = CryptoJS.MD5(senhacad);
+  const apiUrll = apiUrl + 'usuarios';
+  const resourceId = document.getElementById('numeroleratt').value;
+  const data = {
+    nome: nomecad,
+    email: emailcad,
+    senha: hash.toString(),
+  };
+
+  fetch(`${apiUrll}/${resourceId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ` + gettoken,
+    },
+    body: JSON.stringify(data),
+  })
+    .then(response => {
+      status = response.status;
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        return response.json();
+      }
+    })
+    .then(data => {
+      console.log(data);
+      alert(status);
+      if (status === 200) {
+        voltarHome();
+      }
+    })
+    .catch(error => {
+      console.error('Ocorreu um erro na requisição:', error);
+    });
+
+}
+
+
+function excluircadastro(apiUrl, gettoken) {
+  var status;
+  if (document.getElementById('numeroleriddel').value.length == 0) {
+    alert('Preencha o registro!')
+  } else {
+    const apiUrll = apiUrl + 'usuarios';
+    const resourceId = document.getElementById('numeroleriddel').value;
+    fetch(`${apiUrll}/${resourceId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ` + gettoken,
+      },
+      method: 'DELETE',
+    })
+      .then(response => {
+        status = response.status;
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          return response.json();
+        }
+      })
+      .then(data => {
+        console.log(data);
+        alert(status);
+        if(status == 200){
+          window.location.replace('../index.php?iddel=' + document.getElementById('numeroleriddel').value);
+        }
+      })
+      .catch(error => {
+        console.error('Ocorreu um erro na requisição:', error);
+      });
+  }
+
+
+}
+
 
 function lerUsuarios(apiUrl, gettoken) {
   var endereco = apiUrl + 'usuarios';
@@ -210,13 +307,55 @@ function lerUsuarios(apiUrl, gettoken) {
       } else if (response.status === 403) {
         return response.json();
       } else {
-        throw new Error('Erro na requisição');
+        return response.json();
+      }
+    })
+    .then(data => {
+      if(status === 200){
+        for (var index = 0; index < data['usuarios'].length; index++) {
+          var dadosler = [data['usuarios'][index]['registro'], data['usuarios'][index]['nome'], data['usuarios'][index]['email'], data['usuarios'][index]['tipo_usuario']]
+          adicionarLinhaTabela(dadosler);
+        }
+      }
+      console.log(data);
+      alert(status);
+    })
+    .catch(error => {
+      console.error('Ocorreu um erro na requisição:', error);
+    });
+
+}
+
+function lerUsuariosid(apiUrl, gettoken, id) {
+  var endereco = apiUrl + 'usuarios/' + id;
+  var status;
+  fetch(endereco, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ` + gettoken
+    },
+  })
+    .then(response => {
+      status = response.status;
+      if (response.status === 200) {
+        return response.json();
+      } else if (response.status === 401) {
+        return response.json();
+      } else if (response.status === 403) {
+        return response.json();
+      } else {
+        return response.json();
       }
     })
     .then(data => {
       console.log(data);
-      alert(status + ' - \n' + JSON.stringify(data));
+      alert(status);
       if (status === 200) {
+        var dadosler = [data['usuario']['registro'], data['usuario']['nome'], data['usuario']['email'], data['usuario']['tipo_usuario']]
+        adicionarLinhaTabela(dadosler);
+      } else {
+        voltarHome();
       }
     })
     .catch(error => {
@@ -241,7 +380,7 @@ fetch(apiUrl)
       // Transformar a resposta em JSON
       return response.json();
     } else {
-      throw new Error('Erro na requisição');
+      return response.json();
     }
   })
   .then(data => {
@@ -273,7 +412,7 @@ fetch(apiUrl, {
     if (response.status === 200) {
       return response.json();
     } else {
-      throw new Error('Erro na requisição');
+      return response.json();
     }
   })
   .then(data => {
@@ -310,7 +449,7 @@ fetch(`${apiUrl}/${resourceId}`, {
     if (response.status === 200) {
       return response.json();
     } else {
-      throw new Error('Erro na requisição');
+      return response.json();
     }
   })
   .then(data => {
@@ -334,7 +473,7 @@ fetch(`${apiUrl}/${resourceId}`, {
       // Status 204 significa "No Content" e indica que a exclusão foi bem-sucedida
       console.log('Recurso excluído com sucesso.');
     } else {
-      throw new Error('Erro na requisição');
+      return response.json();
     }
   })
   .catch(error => {
