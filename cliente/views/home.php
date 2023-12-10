@@ -24,26 +24,49 @@
     </div>
         <div id="cardlogin" style="height: 600px;">
             <h2 style="position: relative; top: -20px;">Menu</h2>
-            <div id="formlogin">
+            <div id="formhome">
                 <label style="position: relative; top: -100px; left: 115px;">Usuário</label>
                 <nav style="position: relative; left: 50px;
                  width: 200px; top: -95px;">
                     <button style="display: block; width: 200px; height: 40px; font-size: 18px;" id="btn-cad">Cadastrar</button>
-                    <button style="display: block; width: 200px; height: 40px; font-size: 18px; margin-top: 2px;" id="btn-att">Alterar cadastro</button>
-                    <button style="display: block; width: 200px; height: 40px; font-size: 18px; margin-top: 2px;" id="btn-read">Ler dados gerais</button>
-                    <button style="display: block; position: relative; width: 140px; left: 60px; height: 40px; font-size: 16px; margin-top: 2px;" id="btn-read-id">Ler dados Registro</button>
+                    <button style="display: block; width: 200px; height: 40px; font-size: 18px; margin-top: 2px;" id="btn-att">Atualizar cadastro</button>
+                    <button style="display: block; width: 200px; height: 40px; font-size: 18px; margin-top: 2px;" id="btn-read">Lista usuarios</button>
+                    <button style="display: block; position: relative; width: 140px; left: 60px; height: 40px; font-size: 16px; margin-top: 2px;" id="btn-read-id">Lista por registro</button>
                 </nav>
                 <input type="number" style="position: absolute; top: 53px; width: 50px; left: 50px; height: 34px; text-align: center;" id="numerolerid" value="<?=$_SESSION['registro']?>">
                 
-                <label style="position: relative; top: -80px; left: 130px;">Rotas</label>
+                <label style="position: relative; top: -80px; left: 110px;">Segmento</label>
                 <nav style="position: relative; left: 50px;
                  width: 200px; top: -75px;">
-                    <button style="display: block; width: 200px; height: 40px; font-size: 18px;">Cadastrar rotas</button>
-                    <button style="display: block; width: 200px; height: 50px; font-size: 18px; margin-top: 2px;">Atualizar dados de rotas</button>
-                    <button style="display: block; width: 200px; height: 40px; font-size: 18px; margin-top: 2px;">Ler dados</button>
-                    <button style="display: block; width: 200px; height: 40px; font-size: 18px; margin-top: 2px;">Apagar dados de rotas</button>
+                    <button style="display: block; width: 200px; height: 40px; font-size: 18px;" id="btn-cad-seg">Cadastrar segmento</button>
+                    <button style="display: block; width: 200px; height: 50px; font-size: 18px; margin-top: 2px;" id="btn-att-seg">Atualizar segmento</button>
+                    <button style="display: block; width: 200px; height: 40px; font-size: 18px; margin-top: 2px;" id="btn-read-seg">Lista de segmentos</button>
+                    <button style="display: block; position: relative; width: 140px; left: 60px; height: 40px; font-size: 16px; margin-top: 2px;" id="btn-read-seg-id">Lista por id</button>
                 </nav>
-                <div style="position: relative; left: 65px;width: 160px; top: -30px;">
+                <input type="number" style="position: absolute; top: 272px; width: 50px; left: 50px; height: 34px; text-align: center;" id="numerolerid-seg">
+                <div style="position: relative; float: right; left: -50px; top: -408px;">
+
+                    <label style="position: relative; top: -80px; left: 120px;">Pontos</label>
+                    <nav style="position: relative; left: 50px;
+                    width: 200px; top: -75px;">
+                        <button style="display: block; width: 200px; height: 40px; font-size: 18px;" id="btn-cad-pon">Cadastrar pontos</button>
+                        <button style="display: block; width: 200px; height: 40px; font-size: 18px; margin-top: 2px;" id="btn-att-pon">Atualizar ponto</button>
+                        <button style="display: block; width: 200px; height: 40px; font-size: 18px; margin-top: 2px;" id="btn-read-pon">Lista de pontos</button>
+                        <button style="display: block; position: relative; width: 140px; left: 60px; height: 40px; font-size: 16px; margin-top: 2px;" id="btn-read-pon-id">Lista por id</button>
+                    </nav>
+                    <input type="number" style="position: absolute; top: 74px; width: 50px; left: 50px; height: 34px; text-align: center;" id="numerolerid-pon">
+                    
+
+                </div>
+
+                <div style="position: relative; float: right; left: 200px; top: -275px; width: 200px;">
+                    <label style="position: relative; top: 0px; left: 80px;">Rotas</label>
+                    <button style="display: block; width: 200px; height: 40px; font-size: 18px; margin-top: 2px;" id="btn-rota">Fazer rota</button>
+                </div>
+                
+                
+                
+                <div style="position: relative; left: 180px;width: 160px; top: -80px;">
                     <button id="fazerlogout" style="position: relative; width: 160px; height: 45px; font-size: 17px; background-color: red; border: none; border-radius: 10px; color: white;">Sair do sistema</button>
                 </div>
             </div>
@@ -85,10 +108,50 @@
             el.addEventListener('click', function(){  acaoHome('leitura-id') });
         }
 
-        el = document.getElementById('btn-erase');
+
+        el = document.getElementById('btn-cad-seg');
         if(el != null){
-            el.addEventListener('click', function(){ excluircadastro('".$url."','".$_SESSION['token']."') });
+            el.addEventListener('click', function(){ acaoHome('cad-seg') });
         }
+
+        el = document.getElementById('btn-att-seg');
+        if(el != null){
+            el.addEventListener('click', function(){ acaoHome('atualizacao-seg') });
+        }
+
+        el = document.getElementById('btn-read-seg');
+        if(el != null){
+            el.addEventListener('click', function(){ acaoHome('leitura-seg') });
+        }
+        el = document.getElementById('btn-read-seg-id');
+        if(el != null){
+            el.addEventListener('click', function(){  acaoHome('leitura-id-seg') });
+        }
+
+        el = document.getElementById('btn-cad-pon');
+        if(el != null){
+            el.addEventListener('click', function(){ acaoHome('cad-pon') });
+        }
+
+        el = document.getElementById('btn-att-pon');
+        if(el != null){
+            el.addEventListener('click', function(){ acaoHome('atualizacao-pon') });
+        }
+
+        el = document.getElementById('btn-read-pon');
+        if(el != null){
+            el.addEventListener('click', function(){ acaoHome('leitura-pon') });
+        }
+        el = document.getElementById('btn-read-pon-id');
+        if(el != null){
+            el.addEventListener('click', function(){  acaoHome('leitura-id-pon') });
+        }
+        el = document.getElementById('btn-rota');
+        if(el != null){
+            el.addEventListener('click', function(){  acaoHome('rota') });
+        }
+        
+    
         </script>";
     ?>
 </body>

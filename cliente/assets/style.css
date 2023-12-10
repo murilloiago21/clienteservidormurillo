@@ -85,6 +85,7 @@ button {
     position: relative;
     top: 80px;
     left: 90px;
+    width: 300px;
 }
 
 #formlogin input {
@@ -103,6 +104,30 @@ button {
     top: -2px;
 }
 
+#formhome {
+    font-size: 20px;
+    position: relative;
+    top: 80px;
+    left: -15px;
+}
+
+#formhome input {
+    font-size: 16px;
+}
+
+#formhome #registro {
+    position: relative;
+    margin-left: 10px;
+    top: -1px;
+}
+
+#formhome #senha {
+    position: relative;
+    left: 28px;
+    top: -2px;
+}
+
+
 #btn-login {
     position: relative;
     top: 80px;
@@ -112,12 +137,12 @@ button {
     width: 110px;
     background-color: rgb(73, 73, 215);
     color: white;
-    left: -150px;
+    left: 105px;
     font-size: 16px;
     cursor: pointer;
 }
 
-#btn-enviarcad,  #btn-enviaratt{
+#btn-enviarcad,  #btn-enviaratt, #btn-enviarcadseg, #btn-enviaratt-seg, #btn-enviarcadpon, #btn-enviaratt-pon, #btn-enviarrota{
     position: relative;
     top: -50px;
     border-radius: 7px;
@@ -133,7 +158,7 @@ button {
 
 
 
-#tabela-dinamica {
+#tabela-dinamica{
     border: 1px solid black;
     width: 480px;
     text-align: center;
@@ -141,13 +166,20 @@ button {
     border-collapse: collapse;
 }
 
-#tabela-dinamica tr td {
+#tabela-dinamicarota{
+    width: 480px;
+    text-align: center;
+    padding: 0px;
+    border-collapse: collapse;
+}
+
+#tabela-dinamica tr td , #tabela-dinamicarota tr td{
     border: 1px solid black;
     padding: none;
     margin: 0;
 }
 
-#tabela-dinamica th {
+#tabela-dinamica th, #tabela-dinamicarota th {
     border: 1px solid black;
     padding: none;
     margin: 0;

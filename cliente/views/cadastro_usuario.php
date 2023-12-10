@@ -49,31 +49,10 @@
 
     <?php
         echo "<script>
-        el = document.getElementById('fazerlogout');
-        if(el != null){
-            el.addEventListener('click', function(){ enviarLogout('".$url."','".$_SESSION['token']."') });
-        }
-        el = document.getElementById('btn-cad');
-        if(el != null){
-            el.addEventListener('click', function(){ acaoHome('cadastro') });
-        }
-        el = document.getElementById('btn-att');
-        if(el != null){
-            el.addEventListener('click', function(){ acaoHome('atualizacao') });
-        }
-        el = document.getElementById('btn-read');
-        if(el != null){
-            el.addEventListener('click', function(){ acaoHome('leitura') });
-        }
-        el = document.getElementById('btn-erase');
-        if(el != null){
-            el.addEventListener('click', function(){ acaoHome('del') });
-        }
-
-        el = document.getElementById('btn-enviarcad');
-        if(el != null){
-            el.addEventListener('click', function(){ enviarCadastro('".$url."','".$_SESSION['token']."') });
-        }
+            el = document.getElementById('btn-enviarcad');
+            if(el != null){
+                el.addEventListener('click', function(){ enviarCadastro('".$url."','".$_SESSION['token']."') });
+            }
         </script>";
     ?>
 </body>
